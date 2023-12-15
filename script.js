@@ -194,35 +194,35 @@ addEventListener('keyup', handleKeyUp);
 addEventListener('keydown', () => {
     const velocityValue = 1;
     console.log(keys);
-    if (keys['w'] || keys['ц'] || keys['ArrowUp']) {
+    if (keys['w'] || keys['ц'] || keys['ArrowUp'] || keys['W'] || keys['Ц']) {
         player.velocity.y -= velocityValue;
         player.rotation = 0
     }
-    else if (keys['a'] || keys['ф'] || keys['ArrowLeft']) {
+    else if (keys['a'] || keys['ф'] || keys['ArrowLeft'] || keys['A'] || keys['Ф']) {
         player.rotation = -1.57
         player.velocity.x -= velocityValue;
     }
-    else if (keys['s'] || keys['ы'] || keys['ArrowDown']) {
+    else if (keys['s'] || keys['ы'] || keys['ArrowDown'] || keys['S'] || keys['Ы']) {
         player.rotation = 3.15
         player.velocity.y += velocityValue;
     }
-    else if (keys['d'] || keys['в'] || keys['ArrowRight']) {
+    else if (keys['d'] || keys['в'] || keys['ArrowRight'] || keys['D'] || keys['В']) {
         player.rotation = 1.57
         player.velocity.x += velocityValue;
     }
-    if (keys['w'] && keys['a'] || keys['ц'] && keys['ф'] || keys['ArrowUp'] && keys['ArrowLeft']) {
+    if (keys['w'] && keys['a'] || keys['ц'] && keys['ф'] || keys['ArrowUp'] && keys['ArrowLeft'] || keys['W'] && keys['A'] || keys['Ц'] && keys['Ф']) {
         player.velocity.y -= velocityValue;
         player.velocity.x -= velocityValue;
         player.rotation = -0.8
-    } else if (keys['w'] && keys['d'] || keys['ц'] && keys['в'] || keys['ArrowUp'] && keys['ArrowRight']) {
+    } else if (keys['w'] && keys['d'] || keys['ц'] && keys['в'] || keys['ArrowUp'] && keys['ArrowRight'] || keys['W'] && keys['D'] || keys['Ц'] && keys['В']) {
         player.velocity.y -= velocityValue;
         player.velocity.x += velocityValue;
         player.rotation = 0.8
-    } else if (keys['a'] && keys['s'] || keys['ф'] && keys['ы'] || keys['ArrowLeft'] && keys['ArrowDown']) {
+    } else if (keys['a'] && keys['s'] || keys['ф'] && keys['ы'] || keys['ArrowLeft'] && keys['ArrowDown'] || keys['A'] && keys['S'] || keys['Ф'] && keys['Ы']) {
         player.velocity.y += velocityValue;
         player.velocity.x -= velocityValue;
         player.rotation = -2.4
-    } else if (keys['s'] && keys['d'] || keys['ы'] && keys['в'] || keys['ArrowDown'] && keys['ArrowRight']) {
+    } else if (keys['s'] && keys['d'] || keys['ы'] && keys['в'] || keys['ArrowDown'] && keys['ArrowRight'] || keys['S'] && keys['D'] || keys['Ы'] && keys['В']) {
         player.velocity.y += velocityValue;
         player.velocity.x += velocityValue;
         player.rotation = 2.4
