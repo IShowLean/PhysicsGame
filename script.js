@@ -117,8 +117,8 @@ class Background {
 
 const player = new Player()
 const station = new Station()
-const lowerBackground1 = new Background('images/lower-background.png');
-const lowerBackground2 = new Background('images/lower-background.png');
+const lowerBackground1 = new Background('images/lower-background_bez2.png');
+const lowerBackground2 = new Background('images/lower-background_bez2.png');
 const upperBackground = new Background('images/upper-background.png');
 const particles = []
 
