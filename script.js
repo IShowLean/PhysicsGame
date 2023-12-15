@@ -108,16 +108,17 @@ class Background {
         this.backgroundImage.src = path;
     }
 
-    drawBackground() {
+    drawBackground(x, y) {
         if (this.backgroundImage) {
-            content.drawImage(this.backgroundImage, 0, 0, canvas.width, canvas.height);
+            content.drawImage(this.backgroundImage, x, y, canvas.width, canvas.height);
         }
     }
 }
 
 const player = new Player()
 const station = new Station()
-const lowerBackground = new Background('images/lower-background.png');
+const lowerBackground1 = new Background('images/lower-background.png');
+const lowerBackground2 = new Background('images/lower-background.png');
 const upperBackground = new Background('images/upper-background.png');
 const particles = []
 
@@ -140,11 +141,15 @@ function createParticles() {
 
 createParticles();
 
+let x = 0
+let x2 = canvas.width
+let backgroundSpeed = 2
+
 function animate() {
     requestAnimationFrame(animate)
     content.fillStyle = 'black'
     content.fillRect(0, 0, canvas.width, canvas.height)
-    upperBackground.drawBackground();
+    upperBackground.drawBackground(0, 0);
     particles.forEach(particle => {
         if (particle.position.x + particle.radius <= 0) {
             particle.position.x = canvas.width + particle.radius;
@@ -152,7 +157,15 @@ function animate() {
         }
         particle.update()
     })
-    lowerBackground.drawBackground();
+
+    lowerBackground1.drawBackground(x, 0);
+    if (x < -canvas.width) x = canvas.width + x2 - backgroundSpeed
+    else x -= backgroundSpeed
+
+    lowerBackground2.drawBackground(x2, 0);
+    if (x2 < -canvas.width) x2 = canvas.width + x - backgroundSpeed
+    else x2 -= backgroundSpeed
+
     station.update()
     player.update()
 
