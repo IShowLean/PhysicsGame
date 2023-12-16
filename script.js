@@ -41,18 +41,56 @@ class Station {
             y: 350
         }
 
+        this.scale = 0.15
         const image = new Image()
         image.src = 'images/station.png'
         image.onload = () => {
-            const scale = 0.15
             this.image = image
-            this.width = image.width * scale
-            this.height = image.height * scale
+            this.width = image.width * this.scale
+            this.height = image.height * this.scale
+        }
+
+        this.dockingPoint = {
+            x: 20,
+            y: image.height * this.scale / 2 + 9
         }
     }
 
     draw() {
         content.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
+    }
+
+    update() {
+        if (this.image) {
+            this.draw()
+        }
+    }
+}
+
+class Planet {
+    constructor() {
+        this.position = {
+            x: 800,
+            y: 200
+        }
+
+        this.scale = 1.5
+        this.rotation = 45
+        const image = new Image()
+        image.src = 'images/planet.png'
+        image.onload = () => {
+            this.image = image
+            this.width = image.width * this.scale
+            this.height = image.height * this.scale
+        }
+    }
+
+    draw() {
+        content.save();
+        content.translate(this.position.x + this.width / 2, this.position.y + this.height / 2);
+        content.rotate(this.rotation);
+        content.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
+        content.restore();
     }
 
     update() {
@@ -74,13 +112,13 @@ class Player {
             y: 0
         }
 
+        this.scale = 0.35
         const image = new Image()
         image.src = 'images/ship.png'
         image.onload = () => {
-            const scale = 0.35
             this.image = image
-            this.width = image.width * scale
-            this.height = image.height * scale
+            this.width = image.width * this.scale
+            this.height = image.height * this.scale
         }
     }
 
@@ -115,13 +153,6 @@ class Background {
     }
 }
 
-const player = new Player()
-const station = new Station()
-const lowerBackground1 = new Background('images/lower-background_bez2.png');
-const lowerBackground2 = new Background('images/lower-background_bez2.png');
-const upperBackground = new Background('images/upper-background.png');
-const particles = []
-
 function createParticles() {
     for (let i = 0; i < 200; i++) {
         particles.push(new Particle({
@@ -138,6 +169,19 @@ function createParticles() {
         }));
     }
 }
+
+function arePointsColliding(player, station) {
+    return 1077 <= Math.abs(player.position.x - station.dockingPoint.x) && Math.abs(player.position.x - station.dockingPoint.x) <= 1083 &&
+        332 <= Math.abs(player.position.y - station.dockingPoint.y) && Math.abs(player.position.y - station.dockingPoint.y) <= 338
+}
+
+const player = new Player()
+const station = new Station()
+const lowerBackground1 = new Background('images/lower-background.png');
+const lowerBackground2 = new Background('images/lower-background.png');
+const planet = new Planet()
+const upperBackground = new Background('images/upper-background.png');
+const particles = []
 
 createParticles();
 
@@ -167,7 +211,14 @@ function animate() {
     else x2 -= backgroundSpeed
 
     station.update()
+    planet.update()
     player.update()
+
+    if (arePointsColliding(player, station, 80)) {
+        player.velocity.x = 0
+        player.velocity.y = 0
+        console.log('стыковка!');
+    }
 
     if (player.position.x <= 0) {
         player.velocity.x = 0
@@ -186,6 +237,7 @@ function animate() {
         player.velocity.y = 0
         player.position.y = canvas.height - player.height
     }
+    planet.position.x -= 0.1
 }
 
 animate()
@@ -206,7 +258,6 @@ addEventListener('keyup', handleKeyUp);
 
 addEventListener('keydown', () => {
     const velocityValue = 1;
-    console.log(keys);
     if (keys['w'] || keys['ц'] || keys['ArrowUp'] || keys['W'] || keys['Ц']) {
         player.velocity.y -= velocityValue;
         player.rotation = 0
