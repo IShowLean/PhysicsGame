@@ -384,7 +384,7 @@ function startGame() {
     }
     function drawInMenu() {
         content.globalAlpha = 0.7;
-        content.drawImage(backgroundImage1, canvas.width*0.28, canvas.height*0.35, 600, 300);
+        content.drawImage(backgroundImage1, canvas.width*0.29, canvas.height*0.35, 600, 300);
 
         content.fillStyle = 'rgba(0, 0, 0, 0)';
         content.globalAlpha = 1;
@@ -398,7 +398,7 @@ function startGame() {
         content.globalAlpha = 0.5;
         content.strokeStyle = 'purple';
         content.lineWidth = 10;
-        content.strokeRect(canvas.width*0.28, canvas.height*0.35, 600, 300);
+        content.strokeRect(canvas.width*0.29, canvas.height*0.35, 600, 300);
         content.globalAlpha = 1;
 
     }
