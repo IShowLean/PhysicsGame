@@ -23,7 +23,7 @@ function drawMenu() {
     content.fillRect(0, 0, canvas.width, canvas.height);
 
     content.fillStyle = 'gray';
-    content.font = '30px Arial';
+    content.font = '30px DTM-Sans';
     content.fillText('Нажмите на клавишу Enter для старта', canvas.width * 0.5, canvas.height * 0.7);
     content.fillText('R - рестарт', canvas.width * 0.5, canvas.height * 0.77);
     content.fillText('Q - меню', canvas.width * 0.5, canvas.height * 0.84);
@@ -390,8 +390,9 @@ function startGame() {
         content.globalAlpha = 1;
 
         content.fillStyle = 'white';
-        content.font = '24px Arial';
-        content.fillText('Меню', canvas.width*0.48, canvas.height*0.40);
+        content.font = '24px DTM-Sans';
+        content.fillText('Меню', canvas.width*0.47, canvas.height*0.38
+        );
         content.fillStyle = 'gray';
         content.fillText('Нажмите Enter чтобы начать сначала', canvas.width*0.35, canvas.height*0.75);
         content.globalAlpha = 0.5;
