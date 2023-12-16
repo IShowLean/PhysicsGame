@@ -1,5 +1,8 @@
-const canvas = document.querySelector('canvas')
+const canvas = document.getElementById('mainWindow');
 const content = canvas.getContext('2d')
+
+fuelPanelwidth = 200;
+fuelPanelheight = 50;
 
 canvas.width = innerWidth
 canvas.height = innerHeight
@@ -170,11 +173,36 @@ function createParticles() {
     }
 }
 
+const customFont = new FontFace('DTM-Sans', 'url(./DTM-Sans.otf)');
+customFont.load().then((loadedFont) => {
+    document.fonts.add(loadedFont);
+})
+
+function drawFuelPanel() {
+    const borderWidth = 2;
+    const margin = 2
+    content.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    content.fillRect(margin, margin, fuelPanelwidth, fuelPanelheight);
+
+    content.strokeStyle = 'white';
+    content.lineWidth = borderWidth;
+    content.strokeRect(margin, margin, fuelPanelwidth, fuelPanelheight);
+
+    content.fillStyle = 'white';
+    content.font = '25px DTM-Sans';
+
+    const textWidth = content.measureText(`Fuel: ${fuel}`).width;
+    const x = (fuelPanelwidth - textWidth) / 2;
+    const y = (fuelPanelheight + 20) / 2;
+    content.fillText(`Fuel: ${fuel}`, x, y);
+}
+
 function arePointsColliding(player, station) {
     return 1075 <= Math.abs(player.position.x - station.dockingPoint.x) && Math.abs(player.position.x - station.dockingPoint.x) <= 1085 &&
         330 <= Math.abs(player.position.y - station.dockingPoint.y) && Math.abs(player.position.y - station.dockingPoint.y) <= 340
 }
 
+let fuel = 50;
 const player = new Player()
 const station = new Station()
 const lowerBackground1 = new Background('images/lower-background.png');
@@ -182,6 +210,7 @@ const lowerBackground2 = new Background('images/lower-background.png');
 const planet = new Planet()
 const upperBackground = new Background('images/upper-background.png');
 const particles = []
+let blockControl = false;
 
 createParticles();
 
@@ -213,11 +242,16 @@ function animate() {
     station.update()
     planet.update()
     player.update()
+    drawFuelPanel()
+
+    if (fuel <= 0) {
+        blockControl = true;
+        fuel = 0
+    }
 
     if (arePointsColliding(player, station, 80)) {
         player.velocity.x = 0
         player.velocity.y = 0
-        console.log('стыковка!');
     }
 
     if (player.position.x <= 0) {
@@ -244,7 +278,6 @@ function animate() {
 
 animate()
 
-
 const keys = {};
 
 function handleKeyDown(event) {
@@ -260,37 +293,55 @@ addEventListener('keyup', handleKeyUp);
 
 addEventListener('keydown', () => {
     const velocityValue = 1;
+    if (keys['R'] || keys['r'] || keys['К'] || keys['к']) {
+        fuel = 50
+        player.position.x = 200
+        player.position.y = canvas.height / 2
+        player.velocity.x = 0
+        player.velocity.y = 0
+        player.rotation = 0
+        blockControl = false;
+    }
+    if (blockControl) return
     if (keys['w'] || keys['ц'] || keys['ArrowUp'] || keys['W'] || keys['Ц']) {
         player.velocity.y -= velocityValue;
         player.rotation = 0
+        fuel -= velocityValue
     }
     else if (keys['a'] || keys['ф'] || keys['ArrowLeft'] || keys['A'] || keys['Ф']) {
         player.rotation = -1.57
         player.velocity.x -= velocityValue;
+        fuel -= velocityValue
     }
     else if (keys['s'] || keys['ы'] || keys['ArrowDown'] || keys['S'] || keys['Ы']) {
         player.rotation = 3.15
         player.velocity.y += velocityValue;
+        fuel -= velocityValue
     }
     else if (keys['d'] || keys['в'] || keys['ArrowRight'] || keys['D'] || keys['В']) {
         player.rotation = 1.57
         player.velocity.x += velocityValue;
+        fuel -= velocityValue
     }
     if (keys['w'] && keys['a'] || keys['ц'] && keys['ф'] || keys['ArrowUp'] && keys['ArrowLeft'] || keys['W'] && keys['A'] || keys['Ц'] && keys['Ф']) {
         player.velocity.y -= velocityValue;
         player.velocity.x -= velocityValue;
         player.rotation = -0.8
+        fuel -= velocityValue
     } else if (keys['w'] && keys['d'] || keys['ц'] && keys['в'] || keys['ArrowUp'] && keys['ArrowRight'] || keys['W'] && keys['D'] || keys['Ц'] && keys['В']) {
         player.velocity.y -= velocityValue;
         player.velocity.x += velocityValue;
         player.rotation = 0.8
+        fuel -= velocityValue
     } else if (keys['a'] && keys['s'] || keys['ф'] && keys['ы'] || keys['ArrowLeft'] && keys['ArrowDown'] || keys['A'] && keys['S'] || keys['Ф'] && keys['Ы']) {
         player.velocity.y += velocityValue;
         player.velocity.x -= velocityValue;
         player.rotation = -2.4
+        fuel -= velocityValue
     } else if (keys['s'] && keys['d'] || keys['ы'] && keys['в'] || keys['ArrowDown'] && keys['ArrowRight'] || keys['S'] && keys['D'] || keys['Ы'] && keys['В']) {
         player.velocity.y += velocityValue;
         player.velocity.x += velocityValue;
         player.rotation = 2.4
+        fuel -= velocityValue
     }
 });
