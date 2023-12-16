@@ -171,8 +171,8 @@ function createParticles() {
 }
 
 function arePointsColliding(player, station) {
-    return 1077 <= Math.abs(player.position.x - station.dockingPoint.x) && Math.abs(player.position.x - station.dockingPoint.x) <= 1083 &&
-        332 <= Math.abs(player.position.y - station.dockingPoint.y) && Math.abs(player.position.y - station.dockingPoint.y) <= 338
+    return 1075 <= Math.abs(player.position.x - station.dockingPoint.x) && Math.abs(player.position.x - station.dockingPoint.x) <= 1085 &&
+        330 <= Math.abs(player.position.y - station.dockingPoint.y) && Math.abs(player.position.y - station.dockingPoint.y) <= 340
 }
 
 const player = new Player()
