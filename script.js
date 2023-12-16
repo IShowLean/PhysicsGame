@@ -391,7 +391,7 @@ function startGame() {
 
         content.fillStyle = 'white';
         content.font = '24px DTM-Sans';
-        content.fillText('Меню', canvas.width*0.47, canvas.height*0.38
+        content.fillText('Меню', canvas.width*0.48, canvas.height*0.38
         );
         content.fillStyle = 'gray';
         content.fillText('Нажмите Enter чтобы начать сначала', canvas.width*0.35, canvas.height*0.75);
