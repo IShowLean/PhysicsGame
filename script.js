@@ -10,7 +10,7 @@ canvas.height = innerHeight
 let gameStarted = false;
 
 const backgroundImage = new Image();
-backgroundImage.src = '/images/s2menu.png'; // путь к вашему изображению
+backgroundImage.src = '/images/s2menu.png';
 
 backgroundImage.onload = function() {
     drawMenu();
@@ -25,11 +25,28 @@ function drawMenu() {
     content.fillStyle = 'gray';
     content.font = '30px Arial';
     content.fillText('Нажмите на клавишу Enter для старта', canvas.width * 0.5, canvas.height * 0.7);
+    content.fillText('R - рестарт', canvas.width * 0.5, canvas.height * 0.77);
+    content.fillText('Q - меню', canvas.width * 0.5, canvas.height * 0.84);
 }
 
 function startGame() {
+
     gameStarted = true;
-    class Particle {
+    let flag = false;
+
+    const backgroundImage1 = new Image();
+    backgroundImage1.src = '/images/Inmenu.png';
+    backgroundImage1.onload = function() {
+        drawInMenu();
+    };
+    function clear(){
+        console.log("clear")
+        content.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function drawGame(){
+        console.log("drawGame")
+        class Particle {
         constructor({ position, velocity, radius, color, fades }) {
             this.position = position
             this.velocity = velocity
@@ -57,303 +74,360 @@ function startGame() {
 
             if (this.fades) this.opacity -= 0.01
         }
-    }
+        }
 
-    class Station {
-        constructor() {
-            this.position = {
-                x: 1100,
-                y: 350
+        class Station {
+            constructor() {
+                this.position = {
+                    x: 1100,
+                    y: 350
+                }
+
+                this.scale = 0.15
+                const image = new Image()
+                image.src = 'images/station.png'
+                image.onload = () => {
+                    this.image = image
+                    this.width = image.width * this.scale
+                    this.height = image.height * this.scale
+                }
+
+                this.dockingPoint = {
+                    x: 20,
+                    y: image.height * this.scale / 2 + 9
+                }
             }
 
-            this.scale = 0.15
-            const image = new Image()
-            image.src = 'images/station.png'
-            image.onload = () => {
-                this.image = image
-                this.width = image.width * this.scale
-                this.height = image.height * this.scale
+            draw() {
+                content.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
             }
 
-            this.dockingPoint = {
-                x: 20,
-                y: image.height * this.scale / 2 + 9
+            update() {
+                if (this.image) {
+                    this.draw()
+                }
             }
         }
 
-        draw() {
-            content.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
-        }
+        class Planet {
+            constructor() {
+                this.position = {
+                    x: 800,
+                    y: 200
+                }
 
-        update() {
-            if (this.image) {
-                this.draw()
-            }
-        }
-    }
-
-    class Planet {
-        constructor() {
-            this.position = {
-                x: 800,
-                y: 200
-            }
-
-            this.scale = 1.5
-            this.rotation = 45
-            const image = new Image()
-            image.src = 'images/planet.png'
-            image.onload = () => {
-                this.image = image
-                this.width = image.width * this.scale
-                this.height = image.height * this.scale
-            }
-        }
-
-        draw() {
-            content.save();
-            content.translate(this.position.x + this.width / 2, this.position.y + this.height / 2);
-            content.rotate(this.rotation);
-            content.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
-            content.restore();
-        }
-
-        update() {
-            if (this.image) {
-                this.draw()
-            }
-        }
-    }
-
-    class Player {
-        constructor() {
-            this.position = {
-                x: 200,
-                y: canvas.height / 2
+                this.scale = 1.5
+                this.rotation = 45
+                const image = new Image()
+                image.src = 'images/planet.png'
+                image.onload = () => {
+                    this.image = image
+                    this.width = image.width * this.scale
+                    this.height = image.height * this.scale
+                }
             }
 
-            this.velocity = {
-                x: 0,
-                y: 0
+            draw() {
+                content.save();
+                content.translate(this.position.x + this.width / 2, this.position.y + this.height / 2);
+                content.rotate(this.rotation);
+                content.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
+                content.restore();
             }
 
-            this.scale = 0.35
-            const image = new Image()
-            image.src = 'images/ship.png'
-            image.onload = () => {
-                this.image = image
-                this.width = image.width * this.scale
-                this.height = image.height * this.scale
+            update() {
+                if (this.image) {
+                    this.draw()
+                }
             }
         }
 
-        draw() {
-            content.save()
-            content.translate(player.position.x + player.width / 2, player.position.y + player.height / 2)
-            content.rotate(this.rotation)
-            content.translate(-player.position.x - player.width / 2, -player.position.y - player.height / 2)
-            content.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
-            content.restore()
-        }
+        class Player {
+            constructor() {
+                this.position = {
+                    x: 200,
+                    y: canvas.height / 2
+                }
 
-        update() {
-            if (this.image) {
-                this.draw()
-                this.position.x += this.velocity.x
-                this.position.y += this.velocity.y
-            }
-        }
-    }
-
-    class Background {
-        constructor(path) {
-            this.backgroundImage = new Image();
-            this.backgroundImage.src = path;
-        }
-
-        drawBackground(x, y) {
-            if (this.backgroundImage) {
-                content.drawImage(this.backgroundImage, x, y, canvas.width, canvas.height);
-            }
-        }
-    }
-
-    function createParticles() {
-        for (let i = 0; i < 200; i++) {
-            particles.push(new Particle({
-                position: {
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height
-                },
-                velocity: {
-                    x: -0.5,
+                this.velocity = {
+                    x: 0,
                     y: 0
-                },
-                radius: Math.random() * 3,
-                color: '#d3ffff'
-            }));
-        }
-    }
+                }
 
-    const customFont = new FontFace('DTM-Sans', 'url(./DTM-Sans.otf)');
-    customFont.load().then((loadedFont) => {
-        document.fonts.add(loadedFont);
-    })
-
-    function drawFuelPanel() {
-        const borderWidth = 2;
-        const margin = 2
-        content.fillStyle = 'rgba(0, 0, 0, 0.4)';
-        content.fillRect(margin, margin, fuelPanelwidth, fuelPanelheight);
-
-        content.strokeStyle = 'white';
-        content.lineWidth = borderWidth;
-        content.strokeRect(margin, margin, fuelPanelwidth, fuelPanelheight);
-
-        content.fillStyle = 'white';
-        content.font = '25px DTM-Sans';
-
-        const textWidth = content.measureText(`Fuel: ${fuel}`).width;
-        const x = (fuelPanelwidth - textWidth) / 2;
-        const y = (fuelPanelheight + 20) / 2;
-        content.fillText(`Fuel: ${fuel}`, x, y);
-    }
-
-    function arePointsColliding(player, station) {
-        return 1075 <= Math.abs(player.position.x - station.dockingPoint.x) && Math.abs(player.position.x - station.dockingPoint.x) <= 1085 &&
-            330 <= Math.abs(player.position.y - station.dockingPoint.y) && Math.abs(player.position.y - station.dockingPoint.y) <= 340
-    }
-
-    let fuel = 50;
-    const player = new Player()
-    const station = new Station()
-    const lowerBackground1 = new Background('images/lower-background.png');
-    const lowerBackground2 = new Background('images/lower-background.png');
-    const planet = new Planet()
-    const upperBackground = new Background('images/upper-background.png');
-    const particles = []
-    let blockControl = false;
-
-    createParticles();
-
-    let x = 0
-    let x2 = canvas.width
-    let backgroundSpeed = 2
-
-    function animate() {
-        requestAnimationFrame(animate)
-        content.fillStyle = 'black'
-        content.fillRect(0, 0, canvas.width, canvas.height)
-        upperBackground.drawBackground(0, 0);
-        particles.forEach(particle => {
-            if (particle.position.x + particle.radius <= 0) {
-                particle.position.x = canvas.width + particle.radius;
-                particle.position.y = Math.random() * canvas.height;
+                this.scale = 0.35
+                const image = new Image()
+                image.src = 'images/ship.png'
+                image.onload = () => {
+                    this.image = image
+                    this.width = image.width * this.scale
+                    this.height = image.height * this.scale
+                }
             }
-            particle.update()
+
+            draw() {
+                content.save()
+                content.translate(player.position.x + player.width / 2, player.position.y + player.height / 2)
+                content.rotate(this.rotation)
+                content.translate(-player.position.x - player.width / 2, -player.position.y - player.height / 2)
+                content.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
+                content.restore()
+            }
+
+            update() {
+                if (this.image) {
+                    this.draw()
+                    this.position.x += this.velocity.x
+                    this.position.y += this.velocity.y
+                }
+            }
+        }
+
+        class Background {
+            constructor(path) {
+                this.backgroundImage = new Image();
+                this.backgroundImage.src = path;
+            }
+
+            drawBackground(x, y) {
+                if (this.backgroundImage) {
+                    content.drawImage(this.backgroundImage, x, y, canvas.width, canvas.height);
+                }
+            }
+        }
+
+        function createParticles() {
+            for (let i = 0; i < 200; i++) {
+                particles.push(new Particle({
+                    position: {
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height
+                    },
+                    velocity: {
+                        x: -0.5,
+                        y: 0
+                    },
+                    radius: Math.random() * 3,
+                    color: '#d3ffff'
+                }));
+            }
+        }
+
+        const customFont = new FontFace('DTM-Sans', 'url(./DTM-Sans.otf)');
+        customFont.load().then((loadedFont) => {
+            document.fonts.add(loadedFont);
         })
 
-        lowerBackground1.drawBackground(x, 0);
-        if (x < -canvas.width) x = canvas.width + x2 - backgroundSpeed
-        else x -= backgroundSpeed
+        function drawFuelPanel() {
+            const borderWidth = 2;
+            const margin = 2
+            content.fillStyle = 'rgba(0, 0, 0, 0.4)';
+            content.fillRect(margin, margin, fuelPanelwidth, fuelPanelheight);
 
-        lowerBackground2.drawBackground(x2, 0);
-        if (x2 < -canvas.width) x2 = canvas.width + x - backgroundSpeed
-        else x2 -= backgroundSpeed
+            content.strokeStyle = 'white';
+            content.lineWidth = borderWidth;
+            content.strokeRect(margin, margin, fuelPanelwidth, fuelPanelheight);
 
-        station.update()
-        planet.update()
-        player.update()
-        drawFuelPanel()
+            content.fillStyle = 'white';
+            content.font = '25px DTM-Sans';
 
-        if (fuel <= 0) {
-            blockControl = true;
-            fuel = 0
+            const textWidth = content.measureText(`Fuel: ${fuel}`).width;
+            const x = (fuelPanelwidth - textWidth) / 2;
+            const y = (fuelPanelheight + 20) / 2;
+            content.fillText(`Fuel: ${fuel}`, x, y);
         }
 
-        if (arePointsColliding(player, station, 80)) {
-            player.velocity.x = 0
-            player.velocity.y = 0
+        function arePointsColliding(player, station) {
+            return 1075 <= Math.abs(player.position.x - station.dockingPoint.x) && Math.abs(player.position.x - station.dockingPoint.x) <= 1085 &&
+                330 <= Math.abs(player.position.y - station.dockingPoint.y) && Math.abs(player.position.y - station.dockingPoint.y) <= 340
         }
 
-        if (player.position.x <= 0) {
-            player.velocity.x = 0
-            player.position.x = 0
-        }
-        else if (player.position.x + player.width >= canvas.width) {
-            player.velocity.x = 0
-            player.position.x = canvas.width - player.width
+        let fuel = 50;
+        const player = new Player()
+        const station = new Station()
+        const lowerBackground1 = new Background('images/lower-background.png');
+        const lowerBackground2 = new Background('images/lower-background.png');
+        const planet = new Planet()
+        const upperBackground = new Background('images/upper-background.png');
+        const particles = []
+        let blockControl = false;
+
+        createParticles();
+
+        let x = 0
+        let x2 = canvas.width
+        let backgroundSpeed = 2
+
+        function animate() {
+            requestAnimationFrame(animate)
+            content.fillStyle = 'black'
+            content.fillRect(0, 0, canvas.width, canvas.height)
+            upperBackground.drawBackground(0, 0);
+            particles.forEach(particle => {
+                if (particle.position.x + particle.radius <= 0) {
+                    particle.position.x = canvas.width + particle.radius;
+                    particle.position.y = Math.random() * canvas.height;
+                }
+                particle.update()
+            })
+
+            lowerBackground1.drawBackground(x, 0);
+            if (x < -canvas.width) x = canvas.width + x2 - backgroundSpeed
+            else x -= backgroundSpeed
+
+            lowerBackground2.drawBackground(x2, 0);
+            if (x2 < -canvas.width) x2 = canvas.width + x - backgroundSpeed
+            else x2 -= backgroundSpeed
+
+            station.update()
+            planet.update()
+            player.update()
+            drawFuelPanel()
+
+            if(flag){
+                drawInMenu()
+            }
+
+            if (fuel <= 0) {
+                blockControl = true;
+                fuel = 0
+            }
+
+            if (arePointsColliding(player, station, 80)) {
+                player.velocity.x = 0
+                player.velocity.y = 0
+            }
+
+            if (player.position.x <= 0) {
+                player.velocity.x = 0
+                player.position.x = 0
+            }
+            else if (player.position.x + player.width >= canvas.width) {
+                player.velocity.x = 0
+                player.position.x = canvas.width - player.width
+            }
+
+            if (player.position.y <= 0) {
+                player.velocity.y = 0
+                player.position.y = 0
+            }
+            else if (player.position.y + player.height >= canvas.height) {
+                player.velocity.y = 0
+                player.position.y = canvas.height - player.height
+            }
+
+            planet.position.x -= 0.1
+            if (planet.position.x < -200) planet.position.x = 2000
         }
 
-        if (player.position.y <= 0) {
-            player.velocity.y = 0
-            player.position.y = 0
-        }
-        else if (player.position.y + player.height >= canvas.height) {
-            player.velocity.y = 0
-            player.position.y = canvas.height - player.height
-        }
+        animate()
 
-        planet.position.x -= 0.1
-        if (planet.position.x < -200) planet.position.x = 2000
+        addEventListener('keydown', () => {
+            if(flag === false){
+                const velocityValue = 1;
+                if (keys['R'] || keys['r'] || keys['К'] || keys['к']) {
+                    fuel = 50
+                    player.position.x = 200
+                    player.position.y = canvas.height / 2
+                    player.velocity.x = 0
+                    player.velocity.y = 0
+                    player.rotation = 0
+                    blockControl = false;
+                }
+                if(keys['Q'] || keys['q'] || keys['Й'] || keys['й']){
+                    flag = true;
+                    drawInMenuInGame();
+                }
+                if (blockControl) return
+                if (keys['w'] || keys['ц'] || keys['ArrowUp'] || keys['W'] || keys['Ц']) {
+                    player.velocity.y -= velocityValue;
+                    player.rotation = 0
+                    fuel -= velocityValue
+                }
+                else if (keys['a'] || keys['ф'] || keys['ArrowLeft'] || keys['A'] || keys['Ф']) {
+                    player.rotation = -1.57
+                    player.velocity.x -= velocityValue;
+                    fuel -= velocityValue
+                }
+                else if (keys['s'] || keys['ы'] || keys['ArrowDown'] || keys['S'] || keys['Ы']) {
+                    player.rotation = 3.15
+                    player.velocity.y += velocityValue;
+                    fuel -= velocityValue
+                }
+                else if (keys['d'] || keys['в'] || keys['ArrowRight'] || keys['D'] || keys['В']) {
+                    player.rotation = 1.57
+                    player.velocity.x += velocityValue;
+                    fuel -= velocityValue
+                }
+                if (keys['w'] && keys['a'] || keys['ц'] && keys['ф'] || keys['ArrowUp'] && keys['ArrowLeft'] || keys['W'] && keys['A'] || keys['Ц'] && keys['Ф']) {
+                    player.velocity.y -= velocityValue;
+                    player.velocity.x -= velocityValue;
+                    player.rotation = -0.8
+                    fuel -= velocityValue
+                } else if (keys['w'] && keys['d'] || keys['ц'] && keys['в'] || keys['ArrowUp'] && keys['ArrowRight'] || keys['W'] && keys['D'] || keys['Ц'] && keys['В']) {
+                    player.velocity.y -= velocityValue;
+                    player.velocity.x += velocityValue;
+                    player.rotation = 0.8
+                    fuel -= velocityValue
+                } else if (keys['a'] && keys['s'] || keys['ф'] && keys['ы'] || keys['ArrowLeft'] && keys['ArrowDown'] || keys['A'] && keys['S'] || keys['Ф'] && keys['Ы']) {
+                    player.velocity.y += velocityValue;
+                    player.velocity.x -= velocityValue;
+                    player.rotation = -2.4
+                    fuel -= velocityValue
+                } else if (keys['s'] && keys['d'] || keys['ы'] && keys['в'] || keys['ArrowDown'] && keys['ArrowRight'] || keys['S'] && keys['D'] || keys['Ы'] && keys['В']) {
+                    player.velocity.y += velocityValue;
+                    player.velocity.x += velocityValue;
+                    player.rotation = 2.4
+                    fuel -= velocityValue
+                }
+            }
+        });
+    }
+    function drawInMenu() {
+        content.globalAlpha = 0.7;
+        content.drawImage(backgroundImage1, canvas.width*0.28, canvas.height*0.35, 600, 300);
+
+        content.fillStyle = 'rgba(0, 0, 0, 0)';
+        content.globalAlpha = 1;
+
+        content.fillStyle = 'white';
+        content.font = '24px Arial';
+        content.fillText('Меню', canvas.width*0.48, canvas.height*0.40);
+        content.fillStyle = 'gray';
+        content.fillText('Нажмите Enter чтобы начать сначало', canvas.width*0.35, canvas.height*0.75);
+        content.globalAlpha = 0.5;
+        content.strokeStyle = 'purple';
+        content.lineWidth = 10;
+        content.strokeRect(canvas.width*0.28, canvas.height*0.35, 600, 300);
+        content.globalAlpha = 1;
+
+    }
+    
+
+    function drawInMenuInGame() {
+        if (flag) {
+            console.log("flag true")
+            clear();
+            drawInMenu();
+        } else {
+            console.log("flag false")
+            drawGame();
+        }
     }
 
-    animate()
+    drawInMenuInGame()
 
     addEventListener('keydown', () => {
-        const velocityValue = 1;
-        if (keys['R'] || keys['r'] || keys['К'] || keys['к']) {
-            fuel = 50
-            player.position.x = 200
-            player.position.y = canvas.height / 2
-            player.velocity.x = 0
-            player.velocity.y = 0
-            player.rotation = 0
-            blockControl = false;
-        }
-        if (blockControl) return
-        if (keys['w'] || keys['ц'] || keys['ArrowUp'] || keys['W'] || keys['Ц']) {
-            player.velocity.y -= velocityValue;
-            player.rotation = 0
-            fuel -= velocityValue
-        }
-        else if (keys['a'] || keys['ф'] || keys['ArrowLeft'] || keys['A'] || keys['Ф']) {
-            player.rotation = -1.57
-            player.velocity.x -= velocityValue;
-            fuel -= velocityValue
-        }
-        else if (keys['s'] || keys['ы'] || keys['ArrowDown'] || keys['S'] || keys['Ы']) {
-            player.rotation = 3.15
-            player.velocity.y += velocityValue;
-            fuel -= velocityValue
-        }
-        else if (keys['d'] || keys['в'] || keys['ArrowRight'] || keys['D'] || keys['В']) {
-            player.rotation = 1.57
-            player.velocity.x += velocityValue;
-            fuel -= velocityValue
-        }
-        if (keys['w'] && keys['a'] || keys['ц'] && keys['ф'] || keys['ArrowUp'] && keys['ArrowLeft'] || keys['W'] && keys['A'] || keys['Ц'] && keys['Ф']) {
-            player.velocity.y -= velocityValue;
-            player.velocity.x -= velocityValue;
-            player.rotation = -0.8
-            fuel -= velocityValue
-        } else if (keys['w'] && keys['d'] || keys['ц'] && keys['в'] || keys['ArrowUp'] && keys['ArrowRight'] || keys['W'] && keys['D'] || keys['Ц'] && keys['В']) {
-            player.velocity.y -= velocityValue;
-            player.velocity.x += velocityValue;
-            player.rotation = 0.8
-            fuel -= velocityValue
-        } else if (keys['a'] && keys['s'] || keys['ф'] && keys['ы'] || keys['ArrowLeft'] && keys['ArrowDown'] || keys['A'] && keys['S'] || keys['Ф'] && keys['Ы']) {
-            player.velocity.y += velocityValue;
-            player.velocity.x -= velocityValue;
-            player.rotation = -2.4
-            fuel -= velocityValue
-        } else if (keys['s'] && keys['d'] || keys['ы'] && keys['в'] || keys['ArrowDown'] && keys['ArrowRight'] || keys['S'] && keys['D'] || keys['Ы'] && keys['В']) {
-            player.velocity.y += velocityValue;
-            player.velocity.x += velocityValue;
-            player.rotation = 2.4
-            fuel -= velocityValue
-        }
+
+        if (flag) {
+            if(keys['Enter']){
+                flag = false;
+                drawInMenuInGame();
+            }        
+        } 
+      
     });
+
+
 }
 
 drawMenu();
