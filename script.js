@@ -393,7 +393,7 @@ function startGame() {
         content.font = '24px Arial';
         content.fillText('Меню', canvas.width*0.48, canvas.height*0.40);
         content.fillStyle = 'gray';
-        content.fillText('Нажмите Enter чтобы начать сначало', canvas.width*0.35, canvas.height*0.75);
+        content.fillText('Нажмите Enter чтобы начать сначала', canvas.width*0.35, canvas.height*0.75);
         content.globalAlpha = 0.5;
         content.strokeStyle = 'purple';
         content.lineWidth = 10;
