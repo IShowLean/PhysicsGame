@@ -237,7 +237,9 @@ function animate() {
         player.velocity.y = 0
         player.position.y = canvas.height - player.height
     }
+
     planet.position.x -= 0.1
+    if (planet.position.x < -200) planet.position.x = 2000
 }
 
 animate()
