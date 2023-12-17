@@ -53,14 +53,14 @@ function startGame() {
 
     const backgroundImage1 = new Image();
     backgroundImage1.src = '/images/Inmenu.png';
-    backgroundImage1.onload = function() {
+    backgroundImage1.onload = function () {
         drawInMenu();
     };
-    function clear(){
+    function clear() {
         content.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    function drawGame(){
+    function drawGame() {
         let time = 0;
         let animflag = false;
         class Particle {
@@ -120,11 +120,6 @@ function startGame() {
 
             draw() {
                 content.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
-                content.beginPath();
-                content.arc(this.position.x + this.dockingPoint.x, this.position.y + this.dockingPoint.y, 3, 0, Math.PI * 2);
-                content.fillStyle = 'red';
-                content.fill();
-                content.closePath();
             }
 
             update() {
@@ -315,7 +310,7 @@ function startGame() {
             player.update()
             drawFuelPanel()
 
-            if(flag){
+            if (flag) {
                 drawInMenu()
             }
 
@@ -328,12 +323,12 @@ function startGame() {
                 player.velocity.x = 0
                 player.velocity.y = 0
                 time += 1
-                if(!animflag && time > 50){
+                if (!animflag && time > 10) {
                     animflag = true;
                     flag = true;
                 }
             }
-            else{
+            else {
                 time = 0;
             }
 
@@ -364,7 +359,7 @@ function startGame() {
 
         addEventListener('keydown', () => {
             const velocityValue = 1;
-            if(!flag){
+            if (!flag) {
                 if (keys['R'] || keys['r'] || keys['К'] || keys['к']) {
                     fuel = 50
                     player.position.x = 200
@@ -422,15 +417,15 @@ function startGame() {
     }
     function drawInMenu() {
         content.globalAlpha = 1;
-        content.drawImage(backgroundImage1, canvas.width*0.5 - 300, canvas.height*0.5 - 150, 600, 300);
+        content.drawImage(backgroundImage1, canvas.width * 0.5 - 300, canvas.height * 0.5 - 150, 600, 300);
         content.fillStyle = 'rgba(0, 0, 0, 0)';
         content.globalAlpha = 1;
 
         content.fillStyle = 'white';
         content.font = '100px DTM-Sans';
         const textWidth = content.measureText('YOU WIN').width;
-        const x = (canvas.width) / 2 -  textWidth / 2;
-        const y = canvas.height*0.5 - canvas.height*0.3;
+        const x = (canvas.width) / 2 - textWidth / 2;
+        const y = canvas.height * 0.5 - canvas.height * 0.3;
 
         content.fillStyle = 'white';
         content.font = '100px DTM-Sans';
@@ -439,14 +434,14 @@ function startGame() {
         content.fillStyle = 'gray';
         content.font = '35px DTM-Sans';
         const textWidth1 = content.measureText('Press Enter to restart the game').width;
-        const x1 = canvas.width / 2  - textWidth1 / 2;
-        const y1 = canvas.height*0.5 + canvas.height*0.4 ;
+        const x1 = canvas.width / 2 - textWidth1 / 2;
+        const y1 = canvas.height * 0.5 + canvas.height * 0.4;
         content.fillText('Press Enter to restart the game', x1, y1);
 
         content.globalAlpha = 0.5;
         content.strokeStyle = 'purple';
         content.lineWidth = 10;
-        content.strokeRect(canvas.width*0.5 - 300, canvas.height*0.5 - 150, 600, 300);
+        content.strokeRect(canvas.width * 0.5 - 300, canvas.height * 0.5 - 150, 600, 300);
         content.globalAlpha = 1;
 
     }
@@ -465,11 +460,11 @@ function startGame() {
 
     addEventListener('keydown', () => {
         if (flag) {
-            if(keys['Enter']){
+            if (keys['Enter']) {
                 flag = false;
                 drawInMenuInGame();
-            }        
-        } 
+            }
+        }
     });
 
 }
