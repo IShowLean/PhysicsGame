@@ -325,7 +325,8 @@ function startGame() {
             }
 
             if (arePointsColliding(player, station, 80)) {
-                
+                player.velocity.x = 0
+                player.velocity.y = 0
                 time += 1
                 if(!animflag && time > 50){
                     animflag = true;
