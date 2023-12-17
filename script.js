@@ -10,7 +10,7 @@ canvas.height = innerHeight
 let gameStarted = false;
 
 const backgroundImage = new Image();
-backgroundImage.src = '/images/menu.png';
+backgroundImage.src = 'images/menu.png';
 
 backgroundImage.onload = function () {
     drawMenu();
@@ -52,7 +52,7 @@ function startGame() {
     let flag = false;
 
     const backgroundImage1 = new Image();
-    backgroundImage1.src = '/images/Inmenu.png';
+    backgroundImage1.src = 'images/inner-menu.png';
     backgroundImage1.onload = function () {
         drawInMenu();
     };
