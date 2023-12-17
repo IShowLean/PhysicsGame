@@ -96,9 +96,9 @@ function startGame() {
         class Station {
             constructor() {
                 this.position = {
-                    x: 1100,
-                    y: 350
-                }
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height
+                };
 
                 this.scale = 0.15
                 const image = new Image()
@@ -165,8 +165,8 @@ function startGame() {
         class Player {
             constructor() {
                 this.position = {
-                    x: 200,
-                    y: canvas.height / 2
+                    x: Math.random() * canvas.width * 0.4,
+                    y: Math.random() * canvas.height
                 }
 
                 this.velocity = {
@@ -305,8 +305,8 @@ function startGame() {
             if (x2 < -canvas.width) x2 = canvas.width + x - backgroundSpeed
             else x2 -= backgroundSpeed
 
-            station.update()
             planet.update()
+            station.update()
             player.update()
             drawFuelPanel()
 
@@ -319,18 +319,30 @@ function startGame() {
                 fuel = 0
             }
 
-            if (arePointsColliding(player, station, 80)) {
-                player.velocity.x = 0
-                player.velocity.y = 0
+            if (arePointsColliding(player, station, 80) && player.velocity.x <= 5 && player.velocity.y <= 5) {
                 time += 1
-                if (!animflag && time > 10) {
+                if (!animflag && time > 25) {
                     animflag = true;
                     flag = true;
+                    player.velocity.x = 0
+                    player.velocity.y = 0
                 }
             }
             else {
                 time = 0;
             }
+
+            if (!(station.position.x >= canvas.width / 2 && station.position.x <= canvas.width)) {
+                station.position.x = Math.random() * canvas.width
+            }
+            if (!(station.position.y <= canvas.height && station.position.y >= 0)) {
+                station.position.y = Math.random() * canvas.height
+            }
+
+            if (station.position.x < 0) station.position.x = 0
+            else if (station.position.x + station.width >= canvas.width) station.position.x = canvas.width - station.width
+            else if (station.position.y < 0) station.position.y = 0
+            else if (station.position.y + station.height >= canvas.height) station.position.y = canvas.height - station.height
 
             if (player.position.x <= 0) {
                 player.velocity.x = 0
