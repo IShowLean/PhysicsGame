@@ -95,9 +95,11 @@ function startGame() {
 
         class Station {
             constructor() {
+                const margin = 50;
+
                 this.position = {
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height
+                    x: margin + Math.random() * (canvas.width - margin * 2),
+                    y: margin + Math.random() * (canvas.height - margin * 2)
                 };
 
                 this.scale = 0.15
