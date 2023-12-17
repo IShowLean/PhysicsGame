@@ -93,16 +93,24 @@ function startGame() {
                 this.image = image
                 this.width = image.width * this.scale
                 this.height = image.height * this.scale
+                this._dockingPoint = {
+                    x: 20,
+                    y: image.height * this.scale / 2 + 9
+                }
             }
+        }
 
-            this.dockingPoint = {
-                x: 20,
-                y: image.height * this.scale / 2 + 9
-            }
+        get dockingPoint() {
+            return this._dockingPoint;
         }
 
         draw() {
             content.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
+            content.beginPath();
+            content.arc(this.position.x + this.dockingPoint.x, this.position.y + this.dockingPoint.y, 3, 0, Math.PI * 2);
+            content.fillStyle = 'red';
+            content.fill();
+            content.closePath();
         }
 
         update() {
@@ -240,10 +248,14 @@ function startGame() {
     }
 
     function arePointsColliding(player, station) {
-        console.log(Math.abs(player.position.x - station.dockingPoint.x));
-        console.log(Math.abs(player.position.y - station.dockingPoint.y));
-        const yCollision = (328 <= Math.abs(player.position.y - station.dockingPoint.y) && Math.abs(player.position.y - station.dockingPoint.y) <= 338)
-        const xCollision = (1078 <= Math.abs(player.position.x - station.dockingPoint.x) && Math.abs(player.position.x - station.dockingPoint.x) <= 1088)
+        if (!station || !station.dockingPoint) {
+            return false;
+        }
+        const stationX = station.position.x + station.dockingPoint.x;
+        const stationY = station.position.y + station.dockingPoint.y;
+        const xCollision = player.position.x + player.width >= stationX && player.position.x <= stationX;
+        const yCollision = player.position.y + player.height >= stationY && player.position.y <= stationY;
+
         return xCollision && yCollision;
     }
 
