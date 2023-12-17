@@ -61,6 +61,7 @@ function startGame() {
     }
 
     function drawGame(){
+        let time = 0;
         let animflag = false;
         class Particle {
             constructor({ position, velocity, radius, color, fades }) {
@@ -324,12 +325,15 @@ function startGame() {
             }
 
             if (arePointsColliding(player, station, 80)) {
-                player.velocity.x = 0
-                player.velocity.y = 0
-                if(!animflag){
+                
+                time += 1
+                if(!animflag && time > 50){
                     animflag = true;
                     flag = true;
                 }
+            }
+            else{
+                time = 0;
             }
 
             if (player.position.x <= 0) {
@@ -367,6 +371,7 @@ function startGame() {
                     player.velocity.x = 0
                     player.velocity.y = 0
                     player.rotation = 0
+                    time = 0;
                     blockControl = false;
                 }
                 if (blockControl) return
