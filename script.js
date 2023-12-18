@@ -95,11 +95,9 @@ function startGame() {
 
         class Station {
             constructor() {
-                const margin = 50;
-
                 this.position = {
-                    x: margin + Math.random() * (canvas.width - margin * 2),
-                    y: margin + Math.random() * (canvas.height - margin * 2)
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height
                 };
 
                 this.scale = 0.15
@@ -342,9 +340,9 @@ function startGame() {
             }
 
             if (station.position.x < 0) station.position.x = 0
-            else if (station.position.x + station.width >= canvas.width) station.position.x = canvas.width - station.width
-            else if (station.position.y < 0) station.position.y = 0
-            else if (station.position.y + station.height >= canvas.height) station.position.y = canvas.height - station.height
+            if (station.position.x + station.width >= canvas.width) station.position.x = canvas.width - station.width - 50
+            if (station.position.y < 0) station.position.y = 0
+            if (station.position.y + station.height >= canvas.height) station.position.y = canvas.height - station.height - 50
 
             if (player.position.x <= 0) {
                 player.velocity.x = 0
