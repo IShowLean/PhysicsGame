@@ -213,12 +213,13 @@ function startGame() {
             }
 
             update(fuel) {
-                this.isMoving = ( keys['w'] || keys['a'] || keys['s'] || keys['d']
-                    || keys['W'] || keys['A'] || keys['S'] || keys['D']
-                    || keys['ц'] || keys['ф'] || keys['ы'] || keys['в']
-                    || keys['Ц'] || keys['Ф'] || keys['Ы'] || keys['В']
-                    || keys['ArrowUp'] ||keys['ArrowLeft'] || keys['ArrowDown'] || keys['ArrowRight']) && fuel > 0;
-
+                if(!flag){
+                    this.isMoving = ( keys['w'] || keys['a'] || keys['s'] || keys['d']
+                        || keys['W'] || keys['A'] || keys['S'] || keys['D']
+                        || keys['ц'] || keys['ф'] || keys['ы'] || keys['в']
+                        || keys['Ц'] || keys['Ф'] || keys['Ы'] || keys['В']
+                        || keys['ArrowUp'] ||keys['ArrowLeft'] || keys['ArrowDown'] || keys['ArrowRight']) && fuel > 0;
+                }
                 if (this.isMoving && this.images.length > 0) {
                     this.updateFrameIndex();
                 }
@@ -359,6 +360,7 @@ function startGame() {
             if (arePointsColliding(player, station, 80) && player.velocity.x <= 5 && player.velocity.y <= 5) {
                 time += 1
                 if (!animflag && time > 25) {
+                    player.update()
                     animflag = true;
                     flag = true;
                     player.velocity.x = 0
