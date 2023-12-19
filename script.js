@@ -213,7 +213,11 @@ function startGame() {
             }
 
             update(fuel) {
-                this.isMoving = (keys['w'] || keys['a'] || keys['s'] || keys['d'] || keys['ArrowUp'] || keys['ArrowLeft'] || keys['ArrowDown'] || keys['ArrowRight']) && fuel > 0;
+                this.isMoving = ( keys['w'] || keys['a'] || keys['s'] || keys['d']
+                    || keys['W'] || keys['A'] || keys['S'] || keys['D']
+                    || keys['ц'] || keys['ф'] || keys['ы'] || keys['в']
+                    || keys['Ц'] || keys['Ф'] || keys['Ы'] || keys['В']
+                    || keys['ArrowUp'] ||keys['ArrowLeft'] || keys['ArrowDown'] || keys['ArrowRight']) && fuel > 0;
 
                 if (this.isMoving && this.images.length > 0) {
                     this.updateFrameIndex();
