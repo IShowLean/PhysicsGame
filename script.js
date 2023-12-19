@@ -178,6 +178,10 @@ function startGame() {
                 this.frameIndex = 0;
                 this.frames = ['images/ship-anima-1.png', 'images/ship-anima-2.png', 'images/ship-anima-3.png'];
                 this.loadImages();
+
+                this.restingImage = new Image();
+                this.restingImage.src = 'images/ship.png';
+                this.isMoving = false;
             }
 
             loadImages() {
@@ -196,7 +200,8 @@ function startGame() {
             }
 
             draw() {
-                const currentImage = this.images[this.frameIndex];
+                let currentImage = this.isMoving ? this.images[this.frameIndex] : this.restingImage;
+
                 if (currentImage) {
                     content.save();
                     content.translate(this.position.x + this.width / 2, this.position.y + this.height / 2);
@@ -207,6 +212,17 @@ function startGame() {
                 }
             }
 
+            update(fuel) {
+                this.isMoving = (keys['w'] || keys['a'] || keys['s'] || keys['d'] || keys['ArrowUp'] || keys['ArrowLeft'] || keys['ArrowDown'] || keys['ArrowRight']) && fuel > 0;
+
+                if (this.isMoving && this.images.length > 0) {
+                    this.updateFrameIndex();
+                }
+                this.draw();
+                this.position.x += this.velocity.x;
+                this.position.y += this.velocity.y;
+            }
+
             updateFrameIndex() {
                 if (this.frameIndex === 2) {
                     this.frameIndex = 1;
@@ -214,15 +230,6 @@ function startGame() {
                     this.frameIndex = 1;
                 } else {
                     this.frameIndex = (this.frameIndex + 1) % this.frames.length;
-                }
-            }
-
-            update() {
-                if (this.images.length > 0) {
-                    this.updateFrameIndex();
-                    this.draw();
-                    this.position.x += this.velocity.x;
-                    this.position.y += this.velocity.y;
                 }
             }
         }
@@ -333,7 +340,7 @@ function startGame() {
 
             planet.update()
             station.update()
-            player.update()
+            player.update(fuel)
             drawFuelPanel()
 
             if (flag) {
@@ -519,6 +526,8 @@ function handleKeyUp(event) {
     keys[event.key] = false;
 }
 
+
+
 addEventListener('keydown', handleKeyDown);
 addEventListener('keyup', handleKeyUp);
 
@@ -530,4 +539,3 @@ addEventListener('keydown', () => {
         }
     }
 });
-
