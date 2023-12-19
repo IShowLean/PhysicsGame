@@ -167,40 +167,66 @@ function startGame() {
                 this.position = {
                     x: Math.random() * canvas.width * 0.4,
                     y: Math.random() * canvas.height
-                }
+                };
 
                 this.velocity = {
                     x: 0,
                     y: 0
-                }
+                };
 
-                this.scale = 0.35
-                const image = new Image()
-                image.src = 'images/ship.png'
-                image.onload = () => {
-                    this.image = image
-                    this.width = image.width * this.scale
-                    this.height = image.height * this.scale
-                }
+                this.scale = 0.35;
+                this.frameIndex = 0;
+                this.frames = ['images/ship-anima-1.png', 'images/ship-anima-2.png', 'images/ship-anima-3.png'];
+                this.loadImages();
+            }
+
+            loadImages() {
+                this.images = [];
+                this.frames.forEach((src, index) => {
+                    const image = new Image();
+                    image.src = src;
+                    image.onload = () => {
+                        this.images[index] = image;
+                        if (index === 0) {
+                            this.width = image.width * this.scale;
+                            this.height = image.height * this.scale;
+                        }
+                    };
+                });
             }
 
             draw() {
-                content.save()
-                content.translate(player.position.x + player.width / 2, player.position.y + player.height / 2)
-                content.rotate(this.rotation)
-                content.translate(-player.position.x - player.width / 2, -player.position.y - player.height / 2)
-                content.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
-                content.restore()
+                const currentImage = this.images[this.frameIndex];
+                if (currentImage) {
+                    content.save();
+                    content.translate(this.position.x + this.width / 2, this.position.y + this.height / 2);
+                    content.rotate(this.rotation);
+                    content.translate(-this.position.x - this.width / 2, -this.position.y - this.height / 2);
+                    content.drawImage(currentImage, this.position.x, this.position.y, this.width, this.height);
+                    content.restore();
+                }
+            }
+
+            updateFrameIndex() {
+                if (this.frameIndex === 2) {
+                    this.frameIndex = 1;
+                } else if (this.frameIndex === 0) {
+                    this.frameIndex = 1;
+                } else {
+                    this.frameIndex = (this.frameIndex + 1) % this.frames.length;
+                }
             }
 
             update() {
-                if (this.image) {
-                    this.draw()
-                    this.position.x += this.velocity.x
-                    this.position.y += this.velocity.y
+                if (this.images.length > 0) {
+                    this.updateFrameIndex();
+                    this.draw();
+                    this.position.x += this.velocity.x;
+                    this.position.y += this.velocity.y;
                 }
             }
         }
+
 
         class Background {
             constructor(path) {
@@ -503,5 +529,5 @@ addEventListener('keydown', () => {
             startGame();
         }
     }
-
 });
+
